@@ -91,7 +91,16 @@ public:
    * matrix
    * @param delta_t Time between k and k+1 in s
    */
+  MatrixXd GenerateSigmaPoints(double delta_t);
+  void PredictSigmaPoints(MatrixXd Xsig_aug, double delta_t);
+  void PredictMeanVariance();
   void Prediction(double delta_t);
+
+  MatrixXd SigmaPointsPredMeasurementSpaceRadar(int n_z);
+  MatrixXd SigmaPointsPredMeasurementSpaceLidar(int n_z);
+  VectorXd MeanPredictedMeasurement(int n_z, MatrixXd Zsig);
+  MatrixXd CovarianceMatrixMeasurement(int n_z, MatrixXd R, MatrixXd Zsig, VectorXd z_pred);
+  void UpdateState(int n_z, MatrixXd Zsig, VectorXd z_pred, MatrixXd S, VectorXd measurement);
 
   /**
    * Updates the state and the state covariance matrix using a laser measurement
@@ -104,6 +113,8 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+  double CalculateNIS(int n_z, VectorXd z_pred, VectorXd measurement, MatrixXd S);
 };
 
 #endif /* UKF_H */
